@@ -10,8 +10,22 @@ class UserModel extends Model
     use HasFactory;
 
     protected $table = 'user';
-    protected $guarded = ['id'];
 
+    // Izinkan kolom-kolom ini diisi secara mass assignment
+    protected $fillable = [
+        'nama',
+        'npm',
+        'nim',
+        'kelas_id',
+    ];
+
+    // Relasi ke Model Kelas
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas_id');
+    }
+
+    // Method custom getUser() untuk join tabel
     public function getUser()
     {
         return $this->join('kelas', 'kelas.id', '=', 'user.kelas_id')

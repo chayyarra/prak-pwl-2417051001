@@ -1,24 +1,39 @@
-<div class="card shadow-sm border-0">
-    <div class="card-body p-0">
-        <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
+<div class="table-responsive">
+    <table class="table table-hover align-middle shadow-sm rounded border">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Nama</th>
+                <th>NPM</th>
+                <th>Kelas</th>
+                <th class="text-center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($users as $user)
                 <tr>
-                    <th class="ps-3">ID</th>
-                    <th>Nama</th>
-                    <th>NPM</th>
-                    <th>Kelas</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($users as $user)
-                <tr>
-                    <td class="ps-3">{{ $user->id }}</td>
+                    <td>{{ $user->id }}</td>
                     <td>{{ $user->nama }}</td>
-                    <td>{{ $user->nim }}</td>
-                    <td><span class="badge bg-secondary">{{ $user->nama_kelas }}</span></td>
+                    <td>{{ $user->npm ?? $user->nim }}</td>
+                    <td>{{ $user->nama_kelas ?? ($user->kelas->nama_kelas ?? '-') }}</td>
+                    <td class="text-center">
+                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-sm btn-warning text-white me-1">
+                            Edit
+                        </a>
+                        <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data user ini?')">
+                                Hapus
+                            </button>
+                        </form>
+                    </td>
                 </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center text-muted">Belum ada data user.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 </div>
